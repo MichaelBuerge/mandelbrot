@@ -21,12 +21,12 @@ gulp.task('deps', function() {
 
 
 gulp.task('shaders', function() {
-  gulp.src(['src/js/mandelbrot/*.glsl'])
+  gulp.src(['src/js/mandelbrot/shaders/*.glsl'])
     .pipe(inlineResource.multiple({
-        closureProvideSymbol: 'mandelbrot.webglShaders',
-        fileName: 'webglshaders.js',
+        closureProvideSymbol: 'mandelbrot.shaders',
+        fileName: 'shaders.gen.js',
       }))
-    .pipe(gulp.dest('src/js/mandelbrot'));
+    .pipe(gulp.dest('src/js/mandelbrot/shaders'));
 });
 
 

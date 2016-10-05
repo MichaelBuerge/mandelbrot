@@ -4,6 +4,7 @@ goog.provide('mandelbrot.WebglView');
 goog.require('goog.log');
 goog.require('goog.Promise');
 goog.require('mandelbrot.Cutout');
+goog.require('mandelbrot.shaders');
 goog.require('webgl');
 
 /**
@@ -23,31 +24,21 @@ mandelbrot.WebglView = function(canvasElem) {
       periodAnchor: 0,
       smooth: false,
     }
-  }
+  };
 
   this.glInit_();
 
-  goog.Promise.all([
-    // iter program
-    webgl.loadShaders('js/mandelbrot/vert.glsl', 'js/mandelbrot/frag_iter.glsl')
-      .then(function(res) {
-        /** @private @type {WebGLProgram} */
-        this.progIter_ = webgl.createProgram(this.gl_, res.vert, res.frag);
-      }.bind(this)),
-    // copy program
-    webgl.loadShaders('js/mandelbrot/vert.glsl', 'js/mandelbrot/frag_copy.glsl')
-      .then(function(res) {
-        /** @private @type {WebGLProgram} */
-        this.progCopy_ = webgl.createProgram(this.gl_, res.vert, res.frag);
-      }.bind(this)),
-    // draw program
-    webgl.loadShaders('js/mandelbrot/vert.glsl', 'js/mandelbrot/frag_draw.glsl')
-      .then(function(res) {
-        /** @private @type {WebGLProgram} */
-        this.progDraw_ = webgl.createProgram(this.gl_, res.vert, res.frag);
-      }.bind(this)),
-  ])
-  .then(this.setup_.bind(this));
+  var shaders = mandelbrot.shaders;
+  var vsCode = shaders['viewport.vert.glsl']; 
+
+  /** @private @type {WebGLProgram} */
+  this.progIter_ = webgl.createProgram(this.gl_, vsCode, shaders['iter.frag.glsl']);
+  /** @private @type {WebGLProgram} */
+  this.progCopy_ = webgl.createProgram(this.gl_, vsCode, shaders['copy.frag.glsl']);
+  /** @private @type {WebGLProgram} */
+  this.progDraw_ = webgl.createProgram(this.gl_, vsCode, shaders['draw.frag.glsl']);
+
+  this.setup_();
 };
 
 

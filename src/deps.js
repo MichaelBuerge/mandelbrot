@@ -10,6 +10,7 @@ goog.addDependency('../../../../src/js/app.js', ['app'], ['ComplexNumber', 'geom
 goog.addDependency('../../../../src/js/complexnumber.js', ['ComplexNumber'], [], false);
 goog.addDependency('../../../../src/js/geom.js', ['geom'], [], false);
 goog.addDependency('../../../../src/js/mandelbrot/cutout.js', ['mandelbrot.Cutout'], ['ComplexNumber'], false);
+goog.addDependency('../../../../src/js/mandelbrot/shaders/shaders.gen.js', ['mandelbrot.shaders'], [], false);
 goog.addDependency('../../../../src/js/mandelbrot/webgl.js', ['webgl'], ['goog.Promise', 'goog.net.XhrIo'], false);
 goog.addDependency('../../../../src/js/mandelbrot/webglshaders.js', ['mandelbrot.webglShaders'], [], false);
-goog.addDependency('../../../../src/js/mandelbrot/webglview.js', ['mandelbrot.WebglView'], ['goog.Promise', 'goog.log', 'webgl'], false);
+goog.addDependency('../../../../src/js/mandelbrot/webglview.js', ['mandelbrot.WebglView'], ['goog.Promise', 'goog.log', 'mandelbrot.Cutout', 'mandelbrot.shaders', 'webgl'], false);
