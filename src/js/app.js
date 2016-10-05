@@ -1,16 +1,14 @@
 
 goog.provide('app');
 
-goog.require('animate');
-goog.require('animate.Animation');
-goog.require('animate.Fps');
+goog.require('orino.anim');
+goog.require('orino.anim.Animation');
+goog.require('orino.anim.fps.Monitor');
+goog.require('orino.anim.fps.View');
 goog.require('geom');
 goog.require('goog.Uri');
-goog.require('ComplexNumber');
-goog.require('mandelbrot.Field');
-goog.require('mandelbrot.Canvas2dView');
 goog.require('mandelbrot.WebglView');
-goog.require('util');
+goog.require('ComplexNumber');
 
 
 var app = {};
@@ -19,11 +17,7 @@ app.init = function() {
 
   app.canvasElem = document.querySelector('canvas');
 
-  if (location.href.match(/2d/)) {
-    app.view = new mandelbrot.Canvas2dView(app.canvasElem);
-  } else {
-    app.view = new mandelbrot.WebglView(app.canvasElem);
-  }
+  app.view = new mandelbrot.WebglView(app.canvasElem);
 
   app.elements = {
     fpsDisplay: document.querySelector('#fps-display'),
@@ -96,7 +90,7 @@ app.init = function() {
 
   // Animation
 
-  app.animation = new animate.Animation({
+  app.animation = new orino.anim.Animation({
     tick: function(state) {
       app.view.iterateAndDraw();
       app.elements.numIter.innerHTML =
@@ -107,9 +101,9 @@ app.init = function() {
 
   // FPS display
 
-  var fpsMon = new animate.Fps();
+  var fpsMon = new orino.anim.fps.Monitor();
   fpsMon.start();
-  var fpsView = new animate.Fps.View(fpsMon, app.elements.fpsDisplay);
+  var fpsView = new orino.anim.fps.View(fpsMon, app.elements.fpsDisplay);
 
   // Dragging
 
@@ -126,7 +120,7 @@ app.init = function() {
       dragging = true;
     }
 
-    var dragAnim = new animate.Animation({
+    var dragAnim = new orino.anim.Animation({
       priority: 2,
       tick: function() {
         if (moveX == lastX && moveY == lastY) return;
@@ -163,7 +157,7 @@ app.init = function() {
     var MAX_SPEED = 20;
     var acceleration = 20;
 
-    var panner = new animate.Animation({ priority: 2 });
+    var panner = new orino.anim.Animation({ priority: 2 });
 
     panner.UP = new geom.Vec2(0, -1);
     panner.DOWN = new geom.Vec2(0, 1);
