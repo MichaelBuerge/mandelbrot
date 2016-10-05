@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "description": "",
   "dependencies": {
+    "google-closure-library": "^20160911.0.0",
+    "orino-anim": "git+https://github.com/OrinoLabs/orino-anim.git"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-closure-deps": "^0.4.0",
     "gulp-js-inline-resource": "orinolabs/gulp-js-inline-resource"
   },
-  "author": "Michael Bürge"
+  "author": "Michael Bürge <mib@orino.ch>"
 }

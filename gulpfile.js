@@ -8,7 +8,7 @@ var inlineResource = require('gulp-js-inline-resource')
 gulp.task('deps', function() {
   var jsSrcFiles = [
     'src/**/*.js',
-    'bower_components/animate/src/**/*.js',
+    'node_moduels/orino-anim/src/**/*.js',
   ];
   gulp.src(jsSrcFiles)
     .pipe(closureDeps({
