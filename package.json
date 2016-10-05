@@ -1,0 +1,13 @@
+{
+  "name": "mandelbrot",
+  "version": "0.0.1",
+  "description": "",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-closure-deps": "^0.4.0",
+    "gulp-js-inline-resource": "orinolabs/gulp-js-inline-resource"
+  },
+  "author": "Michael Bürge"
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+  <style>
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+  #panel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px;
+    background-color: rgba(255,255,255,0.7);
+  }
+  #panner {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    font-size: 80px;
+    line-height: 80px;
+  }
+  /* r = 0.207 a */
+  #panner div {
+    position: absolute;
+    width: 41.4%;
+    height: 41.4%;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.5);
+    font-size: 30%;
+    line-height: 120%;
+    text-align: center;
+    cursor: pointer;
+  }
+  #up {
+    top: 20.7%; left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  #panner #right {
+    top: 50%; left: 79.3%;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  #down {
+    top: 79.3%; left: 50%;
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+  #left {
+    top: 50%; left: 20.7%;
+    transform: translate(-50%, -50%) rotate(270deg);
+  }
+  button {
+    font-size: 30px;
+    padding: 0 10px;
+  }
+
+  .button {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.5);
+    font-size: 30px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  #iter-reset {
+    float: right;
+    cursor: pointer;
+  }
+
+  </style>
+</head>
+<body>
+  <canvas style="width: 100%; height: 100%;"></canvas>
+  <div id="panel">
+    <div id="panner">
+      <!-- 'BLACK UP-POINTING TRIANGLE' (U+25B2)
+        http://www.fileformat.info/info/unicode/char/25b2/index.htm -->
+      <div id="up" onclick="app.pan(0,100)">&#x25B2;</div>
+      <div id="right" onclick="app.pan(100,0)">&#x25B2;</div>
+      <div id="down" onclick="app.pan(0,-100)">&#x25B2;</div>
+      <div id="left" onclick="app.pan(-100,0)">&#x25B2;</div>
+    </div>
+    <div>
+      <div class="button" onclick="app.scale(-1)">-</div>
+      <div class="button" onclick="app.scale(1)">+</div>
+      <span onclick="app.resetView()" style="cursor:pointer">reset</span>
+    </div>
+    <div>Magnitude: <span id="magnitude"></span></div>
+    <div>FPS: <span id="fps-display">0</span></div>
+    <div>
+      <span id="iter-reset" onclick="app.view.reset()">reset</span>
+      Iterations: <span id="num-iter"></span></div>
+    <div>
+      Iterations per update: <span id="ipu-display">1</span><br>
+      <input id="ipu-input" type="range" value="1" min="1" max="50" step="1">
+    </div>
+    <div>
+      <div>Visualization Mode</div>
+      <div>
+        <label><input type="radio" name="mode" value="1">black &amp; white</label>
+      </div>
+      <div>
+        <label><input type="radio" name="mode" value="2" checked>greyscale</label>
+        <div style="margin-left: 10px">
+          <label><input type="radio" name="scaling" value="0">linear</label>
+          <label><input type="radio" name="scaling" value="1" checked>logarithmic</label>
+          <br>
+          <label><input type="checkbox" name="periodic">periodic</label><br>
+          period: <span id="period-display">100</span><br>
+          <input type="range" name="period" value="100" min="2" max="200"><br>
+          <label><input type="radio" name="period-anchor" value="0" checked>start (static)</label>
+          <label><input type="radio" name="period-anchor" value="1">front (trippy)</label>
+          <br>
+          <label><input type="checkbox" id="smooth-toggle">smooth</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../bower_components/google-closure-library/closure/goog/base.js"></script>
+  <script src="deps.js"></script>
+  <script>goog.require('app');</script>
+  <script>app.init()</script>
+</body>
+</html>
