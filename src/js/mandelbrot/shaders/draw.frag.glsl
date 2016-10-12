@@ -11,6 +11,9 @@ uniform int period;
 uniform int periodAnchor;
 uniform int smooth;
 
+#pragma glslify: texel = require('./texel.glsl')
+
+
 int PERIOD_ANCHOR_FRONT = 1;
 
 
@@ -20,17 +23,6 @@ float INT_PACK_FACTOR = 4194304.0;
 
 int BLACK_AND_WHITE = 1;
 int GREY_SCALE = 2;
-
-
-
-// TODO: Figure out details of texture lookup.
-vec4 texel(sampler2D tex, vec2 size, vec2 px) {
-  px.y = size.y - 1.0 - px.y;
-  
-  vec2 pos = (2.0 * px + 1.0) / (2.0 * size);
-
-  return texture2D(tex, pos);
-}
 
 
 

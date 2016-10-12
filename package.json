@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "dependencies": {
+    "glslify": "^6.0.0",
     "google-closure-library": "^20160911.0.0",
     "orino-anim": "git+https://github.com/OrinoLabs/orino-anim.git"
   },

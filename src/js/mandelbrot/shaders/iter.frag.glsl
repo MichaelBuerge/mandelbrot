@@ -9,19 +9,13 @@ uniform int targetIterations;
 uniform int catchUpSpeedUp;
 uniform sampler2D field;
 
+
+#pragma glslify: texel = require('./texel.glsl')
+
+
 // Single precision floating point number use 23 bits for the fraction.
 // 2^(23-1) = 4194304
 float INT_PACK_FACTOR = 4194304.0;
-
-
-// TODO: Figure out details of texture lookup.
-vec4 texel(sampler2D tex, vec2 size, vec2 px) {
-  px.y = size.y - 1.0 - px.y;
-  
-  vec2 pos = (2.0 * px + 1.0) / (2.0 * size);
-
-  return texture2D(tex, pos);
-}
 
 
 void main() {

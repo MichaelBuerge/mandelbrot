@@ -8,14 +8,7 @@ uniform sampler2D field;
 uniform vec2 offset;
 
 
-// TODO: Figure out details of texture lookup.
-vec4 texel(sampler2D tex, vec2 size, vec2 px) {
-  px.y = size.y - 1.0 - px.y;
-  
-  vec2 pos = (2.0 * px + 1.0) / (2.0 * size);
-
-  return texture2D(tex, pos);
-}
+#pragma glslify: texel = require('./texel.glsl')
 
 
 void main() {
@@ -30,4 +23,3 @@ void main() {
     gl_FragColor = texel(field, size, px);
   }
 }
-
