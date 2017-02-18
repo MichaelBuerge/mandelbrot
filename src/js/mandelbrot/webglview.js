@@ -187,7 +187,7 @@ mandelbrot.WebglView.prototype.initEvents_ = function() {
     });
     dragAnim.start();
 
-    this.canvasElem.onmouseup = app.canvasElem.onmouseout = function(e) {
+    this.canvasElem.onmouseup = this.canvasElem.onmouseout = function(e) {
       dragAnim.stop();
       this.canvasElem.onmousemove = null;
       this.canvasElem.onmouseup = null;
