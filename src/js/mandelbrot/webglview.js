@@ -5,6 +5,9 @@ goog.require('goog.log');
 goog.require('goog.Promise');
 goog.require('mandelbrot.Cutout');
 goog.require('mandelbrot.shaders');
+goog.require('orino.anim');
+goog.require('orino.anim.Conductor');
+goog.require('orino.anim.Animation');
 goog.require('webgl');
 
 /**
@@ -39,6 +42,10 @@ mandelbrot.WebglView = function(canvasElem) {
   this.progDraw_ = webgl.createProgram(this.gl_, vsCode, shaders['draw.frag.glsl']);
 
   this.setup_();
+
+  this.conductor = new orino.anim.Conductor;
+
+  this.initEvents_();
 };
 
 
@@ -107,6 +114,206 @@ mandelbrot.WebglView.prototype.moveBy = function(dx, dy) {
   this.cutout.setCenter(center);
 
   this.copy_(dx, dy);
+};
+
+
+mandelbrot.WebglView.prototype.scale = function(dMagn) {
+  this.cutout.setMagnitude(this.cutout.magnitude + dMagn);
+  this.reset();
+};
+
+
+mandelbrot.WebglView.prototype.startRenderLoop = function() {
+  this.mainAnimation_ = new orino.anim.Animation({
+    conductor: this.conductor,
+    tick: function() {
+      this.iterateAndDraw();
+    }.bind(this)
+  })
+  this.mainAnimation_.start();
+
+};
+
+
+/** @private */
+mandelbrot.WebglView.prototype.initEvents_ = function() {
+
+  // --- Clicking ---
+
+  this.canvasElem.onclick = function(e) {
+    if (this.suppressClick_) return;
+
+    var rect = this.canvasElem.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    var x = (e.clientX - rect.left) * dpr;
+    var y = (e.clientY - rect.top) * dpr;
+
+    var dx = x - rect.width * dpr / 2
+    var dy = y - rect.height * dpr / 2;
+
+    this.moveBy(dx, dy);
+    // TODO
+    //app.setFragment();
+
+  }.bind(this);
+
+  // --- Dragging ---
+
+  this.canvasElem.onmousedown = function(e) {
+    var lastX = e.pageX;
+    var lastY = e.pageY;
+    var moveX = lastX;
+    var moveY = lastY;
+    var dragging = false;
+
+    this.canvasElem.onmousemove = function(e) {
+      moveX = e.pageX;
+      moveY = e.pageY;
+      dragging = true;
+    }
+
+    var dragAnim = new orino.anim.Animation({
+      priority: 2,
+      tick: function() {
+        if (moveX == lastX && moveY == lastY) return;
+
+        var dx = (moveX - lastX) * window.devicePixelRatio;
+        var dy = (moveY - lastY) * window.devicePixelRatio;
+        this.moveBy(-dx, -dy);
+        lastX = moveX;
+        lastY = moveY;
+      }.bind(this)
+    });
+    dragAnim.start();
+
+    this.canvasElem.onmouseup = app.canvasElem.onmouseout = function(e) {
+      dragAnim.stop();
+      this.canvasElem.onmousemove = null;
+      this.canvasElem.onmouseup = null;
+      this.canvasElem.onmouseout = null;
+      if (dragging) {
+        this.suppressClick_ = true;
+        window.setTimeout(
+            function() { this.suppressClick_ = false }.bind(this),
+            10);
+        // TODO
+        //app.setFragment();
+      }
+    }.bind(this);
+
+  }.bind(this);
+
+
+  // --- Panning ---
+
+  var view = this;
+
+  this.panner = (function() {
+    var components = [];
+    var resultant = new geom.Vec2();
+    var currentSpeed = 0;
+    var targetSpeed = 0;
+    var MAX_SPEED = 20;
+    var acceleration = 20;
+
+    var panner = new orino.anim.Animation({ priority: 2 });
+
+    panner.UP = new geom.Vec2(0, -1);
+    panner.DOWN = new geom.Vec2(0, 1);
+    panner.LEFT = new geom.Vec2(-1, 0);
+    panner.RIGHT = new geom.Vec2(1, 0);
+
+    panner.addComponent = function(component) {
+      if (components.indexOf(component) != -1) return;
+
+      components.push(component);
+      targetSpeed = MAX_SPEED;
+      this.updateResultant_();
+      this.start();
+    };
+
+    panner.removeComponent = function(component) {
+      var idx = components.indexOf(component);
+      if (idx != -1) {
+        components.splice(idx, 1);
+      }
+      if (!components.length) {
+        targetSpeed = 0;
+        // Not updating the resultant in this case, as it would come out as
+        // zero (movement would stop immediately).
+      } else {
+        this.updateResultant_();        
+      }
+    };
+
+    panner.updateResultant_ = function() {
+      resultant.zero();
+      components.forEach(function(comp) {
+        resultant.add(comp);
+      });
+      resultant.normalize();      
+    }
+
+    panner.tick = function(state) {
+      if (currentSpeed != targetSpeed) {
+        var dv = state.elapsed / 1000 * acceleration;
+        if (currentSpeed < targetSpeed) {
+          currentSpeed = Math.min(currentSpeed + dv, targetSpeed);
+        } else {
+          currentSpeed = Math.max(currentSpeed - dv, targetSpeed);
+        }
+      }
+      if (currentSpeed == 0) {
+        this.stop();
+      } else {
+        var step = resultant.copy().scale(currentSpeed);
+        step.map(Math.round);
+        view.moveBy(step.x, step.y);
+      }
+    };
+
+    return panner;
+  })();
+
+
+  // Keyboard control.
+
+  document.onkeydown = function(e) {
+    if (e.repeat) return;
+
+    var kc = e.keyCode;
+    if (kc == 67) {  // c
+      this.reset();
+    } else if (kc == 187) {  // +
+      this.scale(1);
+    } else if (kc == 189) {  // -
+      this.scale(-1);
+
+    } else if (kc == 38) {  // Arrow up
+      this.panner.addComponent(this.panner.UP);
+    } else if (kc == 40) {  // Arrow down
+      this.panner.addComponent(this.panner.DOWN);
+    } else if (kc == 37) {  // Arrow left
+      this.panner.addComponent(this.panner.LEFT);
+    } else if (kc == 39) {  // Arrow right
+      this.panner.addComponent(this.panner.RIGHT);
+    }
+    console.log(kc, e);
+  }.bind(this);
+
+  document.onkeyup = function(e) {
+    var kc = e.keyCode;
+    if (kc == 38) {  // Arrow up
+      this.panner.removeComponent(this.panner.UP);
+    } else if (kc == 40) {  // Arrow down
+      this.panner.removeComponent(this.panner.DOWN);
+    } else if (kc == 37) {  // Arrow left
+      this.panner.removeComponent(this.panner.LEFT);
+    } else if (kc == 39) {  // Arrow right
+      this.panner.removeComponent(this.panner.RIGHT);
+    }
+  }.bind(this);
+
 };
 
 
