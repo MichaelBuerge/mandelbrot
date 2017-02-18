@@ -93,28 +93,10 @@ mandelbrot.WebglView.prototype.updateSize = function() {
     this.gl_.viewport(0, 0, this.size.w, this.size.h);
     this.gl_.uniform2f(this.uniformsDraw_.fbSize, this.size.w, this.size.h);
 
-    var w = this.size.w,
-        h = this.size.h;
-
-    this.createFieldData_(w, h);
+    this.fieldData_ = new webgl.TexturePair(this.gl_, this.size.w, this.size.h);
 
     this.reset();
   }
-};
-
-
-/**
- * @parma {WebGLRenderingContext} gl
- * @param {number} w
- * @param {number} h
- * @return {{buf:ArrayBuffer, arr:ArrayBufferView, tex:WebGLTexture}}
- */
-mandelbrot.WebglView.prototype.createFieldData_ = function(w, h) {
-  /**
-   * @type {webgl.TexturePair}
-   * @private
-   */
-  this.fieldData_ = new webgl.TexturePair(this.gl_, w, h);
 };
 
 
