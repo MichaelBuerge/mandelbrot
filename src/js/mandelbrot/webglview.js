@@ -1,6 +1,7 @@
 
 goog.provide('mandelbrot.WebglView');
 
+goog.require('geom');
 goog.require('goog.log');
 goog.require('goog.Promise');
 goog.require('mandelbrot.Cutout');

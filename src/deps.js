@@ -13,4 +13,4 @@ goog.addDependency('../../../../src/js/mandelbrot/cutout.js', ['mandelbrot.Cutou
 goog.addDependency('../../../../src/js/mandelbrot/shaders/shaders.gen.js', ['mandelbrot.shaders'], [], false);
 goog.addDependency('../../../../src/js/mandelbrot/webgl.js', ['webgl'], ['goog.Promise', 'goog.net.XhrIo'], false);
 goog.addDependency('../../../../src/js/mandelbrot/webglshaders.js', ['mandelbrot.webglShaders'], [], false);
-goog.addDependency('../../../../src/js/mandelbrot/webglview.js', ['mandelbrot.WebglView'], ['goog.Promise', 'goog.log', 'mandelbrot.Cutout', 'mandelbrot.shaders', 'webgl'], false);
+goog.addDependency('../../../../src/js/mandelbrot/webglview.js', ['mandelbrot.WebglView'], ['geom', 'goog.Promise', 'goog.log', 'mandelbrot.Cutout', 'mandelbrot.shaders', 'orino.anim', 'orino.anim.Animation', 'orino.anim.Conductor', 'webgl'], false);
