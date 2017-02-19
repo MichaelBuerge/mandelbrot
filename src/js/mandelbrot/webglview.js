@@ -83,6 +83,13 @@ mandelbrot.WebglView.prototype.visualization =
     mandelbrot.WebglView.Visualization.GREY_SCALE;
 
 
+/**
+ * @param {mandelbrot.WebglView.Visualization} vis
+ */
+mandelbrot.WebglView.prototype.setVisualization = function(vis) {
+  this.visualization = vis;
+};
+
 
 /**
  * Updates the size (measuring the canvas element size).
