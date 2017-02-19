@@ -6,6 +6,7 @@ goog.require('orino.anim.Animation');
 goog.require('orino.anim.fps.Monitor');
 goog.require('orino.anim.fps.View');
 goog.require('geom');
+goog.require('goog.events');
 goog.require('goog.Uri');
 goog.require('mandelbrot.WebglView');
 goog.require('ComplexNumber');
@@ -44,6 +45,24 @@ app.init = function() {
       app.elements.magnitude.innerHTML = magn;
     }
   }
+
+  var fragmentUpdateTimer = 0;
+  goog.events.listen(app.view, 'cutoutchange', function(e) {
+    // Setting the fragment is slow. Therefore limiting the rate it's updated.
+    if (!fragmentUpdateTimer) {
+      fragmentUpdateTimer = window.setTimeout(
+          function() {
+            app.setFragment();
+            fragmentUpdateTimer = 0;
+          },
+          200);
+    }
+    app.elements.magnitude.innerHTML = app.view.cutout.magnitude;
+  });
+
+  goog.events.listen(app.view, 'iterationschange', function(e) {
+    app.elements.numIter.innerHTML = e.iterations;
+  })
 
   app.elements.ipuInput.onchange = function(e) {
     app.setIterationsPerUpdate(Number(this.value) || 1);
@@ -154,10 +173,6 @@ app.pan = function(x, y) {
 
 
 app.scale = function(dMagn) {
-  var cutout = app.view.cutout;
-  cutout.setMagnitude(cutout.magnitude + dMagn);
-  app.view.reset();
-  app.setFragment();
-  app.elements.magnitude.innerHTML = cutout.magnitude;
+  app.view.scale(dMagn);
 };
 

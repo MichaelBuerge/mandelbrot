@@ -6,11 +6,11 @@ goog.addDependency('../../../../node_modules/orino-anim/src/orino/anim/animation
 goog.addDependency('../../../../node_modules/orino-anim/src/orino/anim/conductor.js', ['orino.anim.Conductor'], ['orino.anim.Animation', 'orino.anim.Loop'], false);
 goog.addDependency('../../../../node_modules/orino-anim/src/orino/anim/fps.js', ['orino.anim.fps', 'orino.anim.fps.Monitor', 'orino.anim.fps.View'], ['orino.anim.Animation'], false);
 goog.addDependency('../../../../node_modules/orino-anim/src/orino/anim/loop.js', ['orino.anim.Loop'], [], false);
-goog.addDependency('../../../../src/js/app.js', ['app'], ['ComplexNumber', 'geom', 'goog.Uri', 'mandelbrot.WebglView', 'orino.anim', 'orino.anim.Animation', 'orino.anim.fps.Monitor', 'orino.anim.fps.View'], false);
+goog.addDependency('../../../../src/js/app.js', ['app'], ['ComplexNumber', 'geom', 'goog.Uri', 'goog.events', 'mandelbrot.WebglView', 'orino.anim', 'orino.anim.Animation', 'orino.anim.fps.Monitor', 'orino.anim.fps.View'], false);
 goog.addDependency('../../../../src/js/complexnumber.js', ['ComplexNumber'], [], false);
 goog.addDependency('../../../../src/js/geom.js', ['geom'], [], false);
 goog.addDependency('../../../../src/js/mandelbrot/cutout.js', ['mandelbrot.Cutout'], ['ComplexNumber'], false);
 goog.addDependency('../../../../src/js/mandelbrot/shaders/shaders.gen.js', ['mandelbrot.shaders'], [], false);
 goog.addDependency('../../../../src/js/mandelbrot/webgl.js', ['webgl'], ['goog.Promise', 'goog.net.XhrIo'], false);
 goog.addDependency('../../../../src/js/mandelbrot/webglshaders.js', ['mandelbrot.webglShaders'], [], false);
-goog.addDependency('../../../../src/js/mandelbrot/webglview.js', ['mandelbrot.WebglView'], ['geom', 'goog.Promise', 'goog.log', 'mandelbrot.Cutout', 'mandelbrot.shaders', 'orino.anim', 'orino.anim.Animation', 'orino.anim.Conductor', 'webgl'], false);
+goog.addDependency('../../../../src/js/mandelbrot/webglview.js', ['mandelbrot.WebglView'], ['geom', 'goog.Promise', 'goog.events.EventTarget', 'goog.log', 'mandelbrot.Cutout', 'mandelbrot.shaders', 'orino.anim', 'orino.anim.Animation', 'orino.anim.Conductor', 'webgl'], false);

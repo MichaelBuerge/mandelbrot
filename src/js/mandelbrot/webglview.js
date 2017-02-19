@@ -2,6 +2,7 @@
 goog.provide('mandelbrot.WebglView');
 
 goog.require('geom');
+goog.require('goog.events.EventTarget');
 goog.require('goog.log');
 goog.require('goog.Promise');
 goog.require('mandelbrot.Cutout');
@@ -16,6 +17,8 @@ goog.require('webgl');
  * @constructor
  */
 mandelbrot.WebglView = function(canvasElem) {
+  goog.events.EventTarget.call(this);
+
   this.canvasElem = canvasElem;
 
   this.cutout = new mandelbrot.Cutout();
@@ -48,6 +51,7 @@ mandelbrot.WebglView = function(canvasElem) {
 
   this.initEvents_();
 };
+goog.inherits(mandelbrot.WebglView, goog.events.EventTarget);
 
 
 /** @type {goog.debug.Logger} */
@@ -75,7 +79,8 @@ mandelbrot.WebglView.Visualization = {
 
 
 /** @type {mandelbrot.WebglView.Visualization} */
-mandelbrot.WebglView.prototype.visualization = 2;
+mandelbrot.WebglView.prototype.visualization =
+    mandelbrot.WebglView.Visualization.GREY_SCALE;
 
 
 
@@ -105,6 +110,8 @@ mandelbrot.WebglView.prototype.updateSize = function() {
 
     this.reset();
   }
+
+  this.dispatchCutoutChange_();
 };
 
 
@@ -115,12 +122,16 @@ mandelbrot.WebglView.prototype.moveBy = function(dx, dy) {
   this.cutout.setCenter(center);
 
   this.copy_(dx, dy);
+
+  this.dispatchCutoutChange_();
 };
 
 
 mandelbrot.WebglView.prototype.scale = function(dMagn) {
   this.cutout.setMagnitude(this.cutout.magnitude + dMagn);
   this.reset();
+
+  this.dispatchCutoutChange_();
 };
 
 
@@ -132,11 +143,18 @@ mandelbrot.WebglView.prototype.startRenderLoop = function() {
     }.bind(this)
   })
   this.mainAnimation_.start();
-
 };
 
 
 /** @private */
+mandelbrot.WebglView.prototype.dispatchCutoutChange_ = function() {
+  this.dispatchEvent('cutoutchange');
+}
+
+
+/**
+ * @private
+ */
 mandelbrot.WebglView.prototype.initEvents_ = function() {
 
   // --- Clicking ---
@@ -153,9 +171,6 @@ mandelbrot.WebglView.prototype.initEvents_ = function() {
     var dy = y - rect.height * dpr / 2;
 
     this.moveBy(dx, dy);
-    // TODO
-    //app.setFragment();
-
   }.bind(this);
 
   // --- Dragging ---
@@ -197,8 +212,6 @@ mandelbrot.WebglView.prototype.initEvents_ = function() {
         window.setTimeout(
             function() { this.suppressClick_ = false }.bind(this),
             10);
-        // TODO
-        //app.setFragment();
       }
     }.bind(this);
 
@@ -507,6 +520,8 @@ mandelbrot.WebglView.prototype.iterate_ = function() {
 
   // Swap
   this.fieldData_.swap();
+
+  this.dispatchEvent({type: 'iterationschange', iterations: this.iterations});
 };
 
 
