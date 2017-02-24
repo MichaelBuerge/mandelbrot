@@ -8,6 +8,7 @@ uniform int visualization;
 uniform int logarithmic;
 uniform int periodic;
 uniform int period;
+uniform float phase;
 uniform int periodAnchor;
 uniform int smooth;
 
@@ -53,7 +54,9 @@ void main() {
         if (periodAnchor == PERIOD_ANCHOR_FRONT) {
           n += float(period) - mod(float(iterations), float(period));
         }
-
+        // Apply phase.
+        n += phase * float(period);
+        // Modulo.
         n = mod(n, float(period));
         max = float(period) - 1.0;
 

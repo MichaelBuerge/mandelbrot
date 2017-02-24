@@ -28,6 +28,7 @@ mandelbrot.WebglView = function(canvasElem) {
       logarithmic: 1,
       periodic: false,
       period: 100,
+      phase: 0.5,
       periodAnchor: 0,
       smooth: false,
     }
@@ -446,6 +447,7 @@ mandelbrot.WebglView.prototype.setup_ = function() {
     logarithmic: get('logarithmic'),
     periodic: get('periodic'),
     period: get('period'),
+    phase: get('phase'),
     periodAnchor: get('periodAnchor'),
     smooth: get('smooth'),
   };
@@ -589,6 +591,7 @@ mandelbrot.WebglView.prototype.draw_ = function() {
     gl.uniform1i(uni.logarithmic, opts.logarithmic);
     gl.uniform1i(uni.periodic, opts.periodic ? 1 : 0);
     gl.uniform1i(uni.period, opts.period);
+    gl.uniform1f(uni.phase, opts.phase);
     gl.uniform1i(uni.periodAnchor, opts.periodAnchor);
     gl.uniform1i(uni.smooth, opts.smooth ? 1 : 0);
   }
