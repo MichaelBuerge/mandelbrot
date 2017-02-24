@@ -595,14 +595,12 @@ mandelbrot.WebglView.prototype.draw_ = function() {
     // Phase cycling.
     if (opts.animatePhase) {
       if (!this.phaseAnim_) {
-        console.log('start phase anim');
         this.phaseAnim_ = new orino.anim.Animation({
           conductor: this.conductor,
           tick: function(state) {
-            opts.phase += opts.phaseCycleSpeed * state.elapsed / 1000;
+            opts.phase -= opts.phaseCycleSpeed * state.elapsed / 1000;
             if (opts.phase > 1) opts.phase -= 1;
             if (opts.phase < 0) opts.phase += 1;
-            console.log(opts.phase)
           },
         });
         this.phaseAnim_.start();
@@ -610,7 +608,6 @@ mandelbrot.WebglView.prototype.draw_ = function() {
 
     } else {
       if (this.phaseAnim_) {
-        console.log('stop phase anim');
         this.phaseAnim_.stop();
         this.phaseAnim_ = null;
       }
