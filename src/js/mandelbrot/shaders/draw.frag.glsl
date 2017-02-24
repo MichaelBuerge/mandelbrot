@@ -10,7 +10,7 @@ uniform int periodic;
 uniform int period;
 uniform float phase;
 uniform int periodAnchor;
-uniform int smooth;
+uniform int mirror;
 
 #pragma glslify: texel = require('./texel.glsl')
 
@@ -60,7 +60,7 @@ void main() {
         n = mod(n, float(period));
         max = float(period) - 1.0;
 
-        if (smooth == 1) {
+        if (mirror == 1) {
           n = n * 2.0;
           if (n > max) {
             n = max - (n - max);

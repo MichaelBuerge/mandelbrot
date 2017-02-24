@@ -100,8 +100,8 @@ app.init = function() {
         app.view.visualizationOpts.greyScale.periodAnchor = parseInt(this.value);
       };
     });
-  document.querySelector('#smooth-toggle').onclick = function() {
-    app.view.visualizationOpts.greyScale.smooth = this.checked;
+  document.querySelector('#mirror-toggle').onclick = function() {
+    app.view.visualizationOpts.greyScale.mirror = this.checked;
   };
 
 

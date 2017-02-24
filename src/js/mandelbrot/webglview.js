@@ -32,7 +32,7 @@ mandelbrot.WebglView = function(canvasElem) {
       phase: 0.5,
       phaseCycleSpeed: 1,
       periodAnchor: 0,
-      smooth: false,
+      mirror: false,
     }
   };
 
@@ -451,7 +451,7 @@ mandelbrot.WebglView.prototype.setup_ = function() {
     period: get('period'),
     phase: get('phase'),
     periodAnchor: get('periodAnchor'),
-    smooth: get('smooth'),
+    mirror: get('mirror'),
   };
 
   // ------ finish ------
@@ -618,7 +618,7 @@ mandelbrot.WebglView.prototype.draw_ = function() {
     gl.uniform1i(uni.period, opts.period);
     gl.uniform1f(uni.phase, opts.phase);
     gl.uniform1i(uni.periodAnchor, opts.periodAnchor);
-    gl.uniform1i(uni.smooth, opts.smooth ? 1 : 0);
+    gl.uniform1i(uni.mirror, opts.mirror ? 1 : 0);
   }
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.screenQuad_.numItems);
