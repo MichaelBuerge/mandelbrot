@@ -28,7 +28,9 @@ mandelbrot.WebglView = function(canvasElem) {
       logarithmic: 1,
       periodic: false,
       period: 100,
+      animatePhase: false,
       phase: 0.5,
+      phaseCycleSpeed: 1,
       periodAnchor: 0,
       smooth: false,
     }
@@ -580,14 +582,40 @@ mandelbrot.WebglView.prototype.draw_ = function() {
   gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, this.fieldData_.front);
 
+
   // Uniforms.
   var uni = this.uniformsDraw_;
   gl.uniform2f(uni.size, w, h);
   gl.uniform1i(uni.field, 0);
   gl.uniform1i(uni.iterations, this.iterations);
   gl.uniform1i(uni.visualization, this.visualization);
+
   if (this.visualization == mandelbrot.WebglView.Visualization.GREY_SCALE) {
     var opts = this.visualizationOpts.greyScale;
+    // Phase cycling.
+    if (opts.animatePhase) {
+      if (!this.phaseAnim_) {
+        console.log('start phase anim');
+        this.phaseAnim_ = new orino.anim.Animation({
+          conductor: this.conductor,
+          tick: function(state) {
+            opts.phase += opts.phaseCycleSpeed * state.elapsed / 1000;
+            if (opts.phase > 1) opts.phase -= 1;
+            if (opts.phase < 0) opts.phase += 1;
+            console.log(opts.phase)
+          },
+        });
+        this.phaseAnim_.start();
+      }
+
+    } else {
+      if (this.phaseAnim_) {
+        console.log('stop phase anim');
+        this.phaseAnim_.stop();
+        this.phaseAnim_ = null;
+      }
+    }
+
     gl.uniform1i(uni.logarithmic, opts.logarithmic);
     gl.uniform1i(uni.periodic, opts.periodic ? 1 : 0);
     gl.uniform1i(uni.period, opts.period);
