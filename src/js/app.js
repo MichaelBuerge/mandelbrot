@@ -94,10 +94,11 @@ app.init = function() {
     app.view.visualizationOpts.greyScale.period = period;
     app.elements.periodDisplay.innerHTML = period;
   };
-  toArray(document.querySelectorAll('input[type=radio][name="period-anchor"]'))
+  toArray(document.querySelectorAll('input[type=radio][name="phase-animation"]'))
     .forEach(function(elem) {
       elem.onclick = function() {
-        app.view.visualizationOpts.greyScale.periodAnchor = parseInt(this.value);
+        var animate = parseInt(this.value);
+        app.view.visualizationOpts.greyScale.animatePhase = animate;
       };
     });
   document.querySelector('#mirror-toggle').onclick = function() {

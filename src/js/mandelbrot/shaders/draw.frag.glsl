@@ -9,7 +9,6 @@ uniform int logarithmic;
 uniform int periodic;
 uniform int period;
 uniform float phase;
-uniform int periodAnchor;
 uniform int mirror;
 
 #pragma glslify: texel = require('./texel.glsl')
@@ -51,9 +50,6 @@ void main() {
       float max = float(iterations);
 
       if (periodic == 1) {
-        if (periodAnchor == PERIOD_ANCHOR_FRONT) {
-          n += float(period) - mod(float(iterations), float(period));
-        }
         // Apply phase.
         n += phase * float(period);
         // Modulo.

@@ -25,13 +25,12 @@ mandelbrot.WebglView = function(canvasElem) {
 
   this.visualizationOpts = {
     greyScale: {
-      logarithmic: 1,
       periodic: false,
+      logarithmic: 1,
       period: 100,
       animatePhase: false,
       phase: 0.5,
-      phaseCycleSpeed: 1,
-      periodAnchor: 0,
+      phaseCycleSpeed: 0.5,  // cycles / second
       mirror: false,
     }
   };
@@ -450,7 +449,6 @@ mandelbrot.WebglView.prototype.setup_ = function() {
     periodic: get('periodic'),
     period: get('period'),
     phase: get('phase'),
-    periodAnchor: get('periodAnchor'),
     mirror: get('mirror'),
   };
 
@@ -617,7 +615,6 @@ mandelbrot.WebglView.prototype.draw_ = function() {
     gl.uniform1i(uni.periodic, opts.periodic ? 1 : 0);
     gl.uniform1i(uni.period, opts.period);
     gl.uniform1f(uni.phase, opts.phase);
-    gl.uniform1i(uni.periodAnchor, opts.periodAnchor);
     gl.uniform1i(uni.mirror, opts.mirror ? 1 : 0);
   }
 
