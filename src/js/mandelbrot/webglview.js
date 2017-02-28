@@ -12,6 +12,15 @@ goog.require('orino.anim.Conductor');
 goog.require('orino.anim.Animation');
 goog.require('webgl');
 
+
+// TODO:
+// - Visualization option handling doesn't survive ClosureCompiler advanced mode.
+
+
+// FILE SCOPE START
+(function() {
+
+
 /**
  * @param {Element} canvasElem
  * @constructor
@@ -24,7 +33,7 @@ mandelbrot.WebglView = function(canvasElem) {
   this.cutout = new mandelbrot.Cutout();
 
   this.visualizationOpts = {
-    greyScale: {
+    colorStops: {
       periodic: false,
       logarithmic: 1,
       period: 100,
@@ -61,6 +70,14 @@ mandelbrot.WebglView.logger = mandelbrot.WebglView.prototype.logger =
     goog.log.getLogger('mandelbrot.WebglView');
 
 
+
+/** @enum {number} */
+mandelbrot.WebglView.Visualization = {
+  BACK_AND_WHITE: 1,
+  COLOR_STOPS: 2,
+};
+
+
 /** @private @type {boolean} */
 mandelbrot.WebglView.prototype.initialized_ = false;
 
@@ -73,16 +90,9 @@ mandelbrot.WebglView.prototype.iterationsPerUpdate = 1;
 mandelbrot.WebglView.prototype.catchUpSpeedUp = 100;
 
 
-/** @enum {number} */
-mandelbrot.WebglView.Visualization = {
-  BACK_AND_WHITE: 1,
-  GREY_SCALE: 2,
-};
-
-
 /** @type {mandelbrot.WebglView.Visualization} */
 mandelbrot.WebglView.prototype.visualization =
-    mandelbrot.WebglView.Visualization.GREY_SCALE;
+    mandelbrot.WebglView.Visualization.COLOR_STOPS;
 
 
 /**
@@ -588,8 +598,8 @@ mandelbrot.WebglView.prototype.draw_ = function() {
   gl.uniform1i(uni.iterations, this.iterations);
   gl.uniform1i(uni.visualization, this.visualization);
 
-  if (this.visualization == mandelbrot.WebglView.Visualization.GREY_SCALE) {
-    var opts = this.visualizationOpts.greyScale;
+  if (this.visualization == mandelbrot.WebglView.Visualization.COLOR_STOPS) {
+    var opts = this.visualizationOpts.colorStops;
     // Phase cycling.
     if (opts.animatePhase) {
       if (!this.phaseAnim_) {
@@ -622,7 +632,5 @@ mandelbrot.WebglView.prototype.draw_ = function() {
 };
 
 
-
-
-
-
+// FILE SCOPE END
+})();

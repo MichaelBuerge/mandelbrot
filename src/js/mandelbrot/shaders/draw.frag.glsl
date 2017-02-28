@@ -14,15 +14,13 @@ uniform int mirror;
 #pragma glslify: texel = require('./texel.glsl')
 
 
-int PERIOD_ANCHOR_FRONT = 1;
-
-
 // Single precision floating point number use 23 bits for the fraction.
 // 2^(23-1) = 4194304
 float INT_PACK_FACTOR = 4194304.0;
 
+// VISUALIZATION MODES
 int BLACK_AND_WHITE = 1;
-int GREY_SCALE = 2;
+int COLOR_STOPS = 2;
 
 
 
@@ -43,7 +41,7 @@ void main() {
       gl_FragColor = vec4(1, 1, 1, 1);
     }
 
-  } else if (visualization == GREY_SCALE) {
+  } else if (visualization == COLOR_STOPS) {
     if (diverging == 0.0) {
       gl_FragColor = vec4(0, 0, 0, 1);
     } else {
