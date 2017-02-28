@@ -32,17 +32,8 @@ var WebglView = mandelbrot.WebglView = function(canvasElem) {
 
   this.cutout = new mandelbrot.Cutout();
 
-  this.visualizationOpts = {
-    colorStops: {
-      periodic: false,
-      logarithmic: 1,
-      period: 100,
-      animatePhase: false,
-      phase: 0.5,
-      phaseCycleSpeed: 0.5,  // cycles / second
-      mirror: false,
-    }
-  };
+  this.visualizationOpts =
+      JSON.parse(JSON.stringify(WebglView.defaultVisualizationOptions_));
 
   this.glInit_();
 
@@ -78,6 +69,24 @@ WebglView.Visualization = {
 };
 
 
+/**
+ * @type {Object}
+ * @private
+ */
+WebglView.defaultVisualizationOptions_ = {
+  [WebglView.Visualization.BLACK_AND_WHITE]: {},
+  [WebglView.Visualization.COLOR_STOPS]: {
+    periodic: false,
+    logarithmic: 1,
+    period: 100,
+    animatePhase: false,
+    phase: 0.5,
+    phaseCycleSpeed: 0.5,  // cycles / second
+    mirror: false,
+  },
+};
+
+
 /** @private @type {boolean} */
 WebglView.prototype.initialized_ = false;
 
@@ -100,6 +109,22 @@ WebglView.prototype.visualization =
  */
 WebglView.prototype.setVisualization = function(vis) {
   this.visualization = vis;
+};
+
+
+/**
+ * Sets option for color stops visualization.
+ * @param {string} optionName
+ * @param {*} value
+ */
+WebglView.prototype.setColorStopsOption = function(option, value) {
+  var opts = this.visualizationOpts[WebglView.Visualization.COLOR_STOPS];
+  if (!(option in opts)) throw Error('No such option: ' + option);
+  if (typeof opts[option] != typeof value) {
+    throw Error('Option type mismatch. ' +
+                `Expected ${typeof opts[option]}, received ${typeof value}.`);
+  }
+  opts[option] = value;
 };
 
 
@@ -599,7 +624,7 @@ WebglView.prototype.draw_ = function() {
   gl.uniform1i(uni.visualization, this.visualization);
 
   if (this.visualization == WebglView.Visualization.COLOR_STOPS) {
-    var opts = this.visualizationOpts.colorStops;
+    var opts = this.visualizationOpts[WebglView.Visualization.COLOR_STOPS];
     // Phase cycling.
     if (opts.animatePhase) {
       if (!this.phaseAnim_) {

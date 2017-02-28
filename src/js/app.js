@@ -27,7 +27,7 @@ app.init = function() {
     numIter: document.querySelector('#num-iter'),
     magnitude: document.querySelector('#magnitude'),
     periodDisplay: document.querySelector('#period-display'),
-  }
+  };
 
   // Get center/zoom from fragment identifier (if present).
   var uri = new goog.Uri(window.location.href);
@@ -75,34 +75,34 @@ app.init = function() {
   toArray(document.querySelectorAll('input[type=radio][name=mode]'))
     .forEach(function(elem) {
       elem.onclick = function() {
-        app.view.visualization = parseInt(this.value);
+        app.view.setVisualization(parseInt(this.value));
       };
     });
 
   toArray(document.querySelectorAll('[type=radio][name=scaling]'))
     .forEach(function(elem) {
       elem.onclick = function() {
-        app.view.visualizationOpts.greyScale.logarithmic = parseInt(this.value); 
+        app.view.setColorStopsOption('logarithmic', parseInt(this.value));
       };
     });
 
   document.querySelector('input[name=periodic]').onclick = function() {
-    app.view.visualizationOpts.greyScale.periodic = this.checked;
+    app.view.setColorStopsOption('periodic', this.checked);
   };
   document.querySelector('input[name=period]').onchange = function() {
     var period = parseInt(this.value);
-    app.view.visualizationOpts.greyScale.period = period;
+    app.view.setColorStopsOption('period', period);
     app.elements.periodDisplay.innerHTML = period;
   };
   toArray(document.querySelectorAll('input[type=radio][name="phase-animation"]'))
     .forEach(function(elem) {
       elem.onclick = function() {
-        var animate = parseInt(this.value);
-        app.view.visualizationOpts.greyScale.animatePhase = animate;
+        var animate = !!parseInt(this.value);
+        app.view.setColorStopsOption('animatePhase', animate);
       };
     });
   document.querySelector('#mirror-toggle').onclick = function() {
-    app.view.visualizationOpts.greyScale.mirror = this.checked;
+    app.view.setColorStopsOption('mirror', this.checked);
   };
 
 
