@@ -25,7 +25,7 @@ goog.require('webgl');
  * @param {Element} canvasElem
  * @constructor
  */
-mandelbrot.WebglView = function(canvasElem) {
+var WebglView = mandelbrot.WebglView = function(canvasElem) {
   goog.events.EventTarget.call(this);
 
   this.canvasElem = canvasElem;
@@ -62,43 +62,43 @@ mandelbrot.WebglView = function(canvasElem) {
 
   this.initEvents_();
 };
-goog.inherits(mandelbrot.WebglView, goog.events.EventTarget);
+goog.inherits(WebglView, goog.events.EventTarget);
 
 
 /** @type {goog.debug.Logger} */
-mandelbrot.WebglView.logger = mandelbrot.WebglView.prototype.logger =
-    goog.log.getLogger('mandelbrot.WebglView');
+WebglView.logger = WebglView.prototype.logger =
+    goog.log.getLogger('WebglView');
 
 
 
 /** @enum {number} */
-mandelbrot.WebglView.Visualization = {
+WebglView.Visualization = {
   BACK_AND_WHITE: 1,
   COLOR_STOPS: 2,
 };
 
 
 /** @private @type {boolean} */
-mandelbrot.WebglView.prototype.initialized_ = false;
+WebglView.prototype.initialized_ = false;
 
 
 /** @type {number} */
-mandelbrot.WebglView.prototype.iterationsPerUpdate = 1;
+WebglView.prototype.iterationsPerUpdate = 1;
 
 
 /** @type {number} */
-mandelbrot.WebglView.prototype.catchUpSpeedUp = 100;
+WebglView.prototype.catchUpSpeedUp = 100;
 
 
-/** @type {mandelbrot.WebglView.Visualization} */
-mandelbrot.WebglView.prototype.visualization =
-    mandelbrot.WebglView.Visualization.COLOR_STOPS;
+/** @type {WebglView.Visualization} */
+WebglView.prototype.visualization =
+    WebglView.Visualization.COLOR_STOPS;
 
 
 /**
- * @param {mandelbrot.WebglView.Visualization} vis
+ * @param {WebglView.Visualization} vis
  */
-mandelbrot.WebglView.prototype.setVisualization = function(vis) {
+WebglView.prototype.setVisualization = function(vis) {
   this.visualization = vis;
 };
 
@@ -106,7 +106,7 @@ mandelbrot.WebglView.prototype.setVisualization = function(vis) {
 /**
  * Updates the size (measuring the canvas element size).
  */
-mandelbrot.WebglView.prototype.updateSize = function() {
+WebglView.prototype.updateSize = function() {
   var rect = this.canvasElem.getBoundingClientRect();
 
   var devicePixelRatio = window.devicePixelRatio;
@@ -134,7 +134,7 @@ mandelbrot.WebglView.prototype.updateSize = function() {
 };
 
 
-mandelbrot.WebglView.prototype.moveBy = function(dx, dy) {
+WebglView.prototype.moveBy = function(dx, dy) {
   var center = this.cutout.center;
   center.r += dx * this.cutout.delta;
   center.i -= dy * this.cutout.delta;
@@ -146,7 +146,7 @@ mandelbrot.WebglView.prototype.moveBy = function(dx, dy) {
 };
 
 
-mandelbrot.WebglView.prototype.scale = function(dMagn) {
+WebglView.prototype.scale = function(dMagn) {
   this.cutout.setMagnitude(this.cutout.magnitude + dMagn);
   this.reset();
 
@@ -154,7 +154,7 @@ mandelbrot.WebglView.prototype.scale = function(dMagn) {
 };
 
 
-mandelbrot.WebglView.prototype.startRenderLoop = function() {
+WebglView.prototype.startRenderLoop = function() {
   this.mainAnimation_ = new orino.anim.Animation({
     conductor: this.conductor,
     tick: function() {
@@ -166,7 +166,7 @@ mandelbrot.WebglView.prototype.startRenderLoop = function() {
 
 
 /** @private */
-mandelbrot.WebglView.prototype.dispatchCutoutChange_ = function() {
+WebglView.prototype.dispatchCutoutChange_ = function() {
   this.dispatchEvent('cutoutchange');
 }
 
@@ -174,7 +174,7 @@ mandelbrot.WebglView.prototype.dispatchCutoutChange_ = function() {
 /**
  * @private
  */
-mandelbrot.WebglView.prototype.initEvents_ = function() {
+WebglView.prototype.initEvents_ = function() {
 
   // --- Clicking ---
 
@@ -356,7 +356,7 @@ mandelbrot.WebglView.prototype.initEvents_ = function() {
 /**
  * @private
  */
-mandelbrot.WebglView.prototype.glInit_ = function() {
+WebglView.prototype.glInit_ = function() {
   /**
    * @type {WebGLRenderingContext}
    * @private
@@ -375,7 +375,7 @@ mandelbrot.WebglView.prototype.glInit_ = function() {
 
 
 
-mandelbrot.WebglView.prototype.setup_ = function() {
+WebglView.prototype.setup_ = function() {
   var gl = this.gl_;
 
   gl.clearColor(0, 0, 0, 1);
@@ -476,7 +476,7 @@ mandelbrot.WebglView.prototype.setup_ = function() {
 /**
  * Reset the image..
  */
-mandelbrot.WebglView.prototype.reset = function() {
+WebglView.prototype.reset = function() {
   if (!this.initialized_) return;
 
   var gl = this.gl_;
@@ -495,7 +495,7 @@ mandelbrot.WebglView.prototype.reset = function() {
 /**
  * Performs iteration(s) and draws.
  */
-mandelbrot.WebglView.prototype.iterateAndDraw = function() {
+WebglView.prototype.iterateAndDraw = function() {
   if (!this.initialized_) return;
 
   //this.field.iterate(this.iterationsPerUpdate);
@@ -507,7 +507,7 @@ mandelbrot.WebglView.prototype.iterateAndDraw = function() {
 };
 
 
-mandelbrot.WebglView.prototype.iterate_ = function() {
+WebglView.prototype.iterate_ = function() {
   var gl = this.gl_;
   var w = this.size.w;
   var h = this.size.h;
@@ -547,7 +547,7 @@ mandelbrot.WebglView.prototype.iterate_ = function() {
 /**
  *
  */
-mandelbrot.WebglView.prototype.copy_ = function(offsetX, offsetY) {
+WebglView.prototype.copy_ = function(offsetX, offsetY) {
   var gl = this.gl_;
   var w = this.size.w;
   var h = this.size.h;
@@ -578,7 +578,7 @@ mandelbrot.WebglView.prototype.copy_ = function(offsetX, offsetY) {
 /**
  * @private
  */
-mandelbrot.WebglView.prototype.draw_ = function() {
+WebglView.prototype.draw_ = function() {
   var gl = this.gl_;
   var w = this.size.w;
   var h = this.size.h;
@@ -598,7 +598,7 @@ mandelbrot.WebglView.prototype.draw_ = function() {
   gl.uniform1i(uni.iterations, this.iterations);
   gl.uniform1i(uni.visualization, this.visualization);
 
-  if (this.visualization == mandelbrot.WebglView.Visualization.COLOR_STOPS) {
+  if (this.visualization == WebglView.Visualization.COLOR_STOPS) {
     var opts = this.visualizationOpts.colorStops;
     // Phase cycling.
     if (opts.animatePhase) {
