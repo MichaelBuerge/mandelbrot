@@ -129,6 +129,15 @@ WebglView.prototype.setColorStopsOption = function(option, value) {
 
 
 /**
+ * Returns the current options for the active visualization.
+ * @return {Object}
+ */
+WebglView.prototype.getActiveVisualizationOptions = function() {
+  return this.visualizationOpts[this.visualization];
+};
+
+
+/**
  * Updates the size (measuring the canvas element size).
  */
 WebglView.prototype.updateSize = function() {
